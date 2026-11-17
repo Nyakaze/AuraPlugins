@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <RootNamespace>Aura.Presence.Stremio</RootNamespace>
+    <UseWPF>true</UseWPF>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(AuraRoot)src\Aura.Presence.Sdk\Aura.Presence.Sdk.csproj" Private="false" ExcludeAssets="runtime" />
+    <ProjectReference Include="$(AuraRoot)services\Aura.Presence.Services.AniList\Aura.Presence.Services.AniList.csproj" Private="false" ExcludeAssets="runtime" />
+    <ProjectReference Include="$(AuraRoot)services\Aura.Presence.Services.Chromium\Aura.Presence.Services.Chromium.csproj" Private="false" ExcludeAssets="runtime" />
+    <ProjectReference Include="$(AuraRoot)services\Aura.Presence.Services.Cinemeta\Aura.Presence.Services.Cinemeta.csproj" Private="false" ExcludeAssets="runtime" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="System.IO" />
+    <None Include="icon.png" CopyToOutputDirectory="PreserveNewest" />
+    <None Remove="plugin.json" />
+  </ItemGroup>
+
+</Project>

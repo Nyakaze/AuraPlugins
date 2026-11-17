@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/plugins/">
+    <Project Path="plugins/Aura.Presence.AniListSync/Aura.Presence.AniListSync.csproj" />
+    <Project Path="plugins/Aura.Presence.Stremio/Aura.Presence.Stremio.csproj" />
+  </Folder>
+  <Folder Name="/aura/">
+    <Project Path="../AuraPresence/src/Aura.Presence.Sdk/Aura.Presence.Sdk.csproj" />
+    <Project Path="../AuraPresence/services/Aura.Presence.Services.AniList/Aura.Presence.Services.AniList.csproj" />
+    <Project Path="../AuraPresence/services/Aura.Presence.Services.Chromium/Aura.Presence.Services.Chromium.csproj" />
+    <Project Path="../AuraPresence/services/Aura.Presence.Services.Cinemeta/Aura.Presence.Services.Cinemeta.csproj" />
+  </Folder>
+</Solution>

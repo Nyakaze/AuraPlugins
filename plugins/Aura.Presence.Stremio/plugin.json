@@ -1,0 +1,13 @@
+{
+  "name": "Stremio",
+  "author": "Aura",
+  "description": "Shows what you watch in Stremio on your profile. Nothing to set up.",
+  "category": "Video",
+  "uses": [
+    "Windows media controls, for what is playing",
+    "Stremio’s player and saved library, for titles and episodes",
+    "AniList and Cinemeta online, for posters and links"
+  ],
+  "showsActivity": true,
+  "repoUrl": "https://github.com/Nyakaze/AuraPlugins/tree/main/plugins/Aura.Presence.Stremio"
+}
