@@ -6,8 +6,7 @@ namespace Aura.Presence.Stremio;
 
 public sealed partial class StremioPlugin : IPresencePlugin
 {
-    public const string DefaultApplicationId = "1516903509058916543";
-    public const string ApplicationIdSetting = "discordApplicationId";
+    public const string IconUrl = "https://raw.githubusercontent.com/Nyakaze/AuraPlugins/main/plugins/Aura.Presence.Stremio/icon.png";
 
     private static readonly TimeSpan PollInterval = TimeSpan.FromSeconds(2);
     private static readonly TimeSpan RepublishInterval = TimeSpan.FromSeconds(15);
@@ -24,7 +23,6 @@ public sealed partial class StremioPlugin : IPresencePlugin
     private IPluginContext _context = null!;
     private CancellationTokenSource? _lifetime;
     private Task? _loop;
-    private string _applicationId = DefaultApplicationId;
 
     private string? _fileName;
     private ReleaseName? _release;
@@ -50,16 +48,9 @@ public sealed partial class StremioPlugin : IPresencePlugin
 
     public string Description => "Reads what Stremio plays from Windows media controls and its saved library. Nothing to set up.";
 
-    public IReadOnlyList<PluginSetting> Settings { get; } =
-    [
-        new TextSetting(ApplicationIdSetting, "Discord application ID", DefaultApplicationId,
-            "Sets the name above your status, “Watching Stremio”. Use your own app to change it.", Monospace: true)
-    ];
-
     public Task StartAsync(IPluginContext context, CancellationToken cancellationToken)
     {
         _context = context;
-        _applicationId = context.Settings.Get(ApplicationIdSetting, DefaultApplicationId);
         _lifetime = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         _loop = Task.Run(() => RunAsync(_lifetime.Token), CancellationToken.None);
 
@@ -290,12 +281,11 @@ public sealed partial class StremioPlugin : IPresencePlugin
     {
         return new PresenceActivity
         {
-            ApplicationId = _applicationId,
             Kind = ActivityKind.Watching,
             Name = media.Title,
             Details = media.Title,
             State = StateLine(media),
-            LargeImage = new PresenceImage(media.PosterUrl ?? "stremio", media.EpisodeTitle ?? media.Title),
+            LargeImage = new PresenceImage(media.PosterUrl ?? IconUrl, media.EpisodeTitle ?? media.Title),
             StartedAt = startedAt,
             EndsAt = startedAt is { } start && media.Duration is { } duration ? start + duration : null,
             Buttons = [ButtonFor(media)]
