@@ -1,10 +1,22 @@
 <Project>
   <PropertyGroup>
     <EnableDynamicLoading>true</EnableDynamicLoading>
-    <AuraDevPluginDir>$(AuraRoot)src\Aura.Presence.App\bin\Debug\net10.0-windows\plugins\$(MSBuildProjectName)\</AuraDevPluginDir>
+    <AuraDevPluginDir>$(AuraRoot)src\Aura.Presence.App\bin\Debug\net10.0-windows10.0.19041.0\plugins\$(MSBuildProjectName)\</AuraDevPluginDir>
   </PropertyGroup>
 
-  <Target Name="CopyToAuraDevPlugins" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug' And Exists('$(AuraRoot)src\Aura.Presence.App\bin\Debug\net10.0-windows')">
+  <Target Name="LeaveOutAuraProvidedWindowsSdk" AfterTargets="ResolveReferences">
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' == 'Microsoft.Windows.SDK.NET.Ref'" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="LeaveOutAuraProvidedWindowsSdkOnPublish" AfterTargets="ComputeResolvedFilesToPublishList">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.NuGetPackageId)' == 'Microsoft.Windows.SDK.NET.Ref'" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CopyToAuraDevPlugins" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug' And Exists('$(AuraRoot)src\Aura.Presence.App\bin\Debug\net10.0-windows10.0.19041.0')">
     <ItemGroup>
       <AuraPluginFiles Include="$(OutDir)**\*.*" />
     </ItemGroup>

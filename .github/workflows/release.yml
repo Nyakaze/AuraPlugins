@@ -15,7 +15,7 @@ permissions:
 concurrency: release
 
 env:
-  AURA_REF: v1.1.0
+  AURA_REF: v1.2.0
 
 defaults:
   run:

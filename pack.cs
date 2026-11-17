@@ -96,11 +96,12 @@ Console.WriteLine($"Wrote {outputPath}.");
     if (!File.Exists(assembly))
         Fail($"{name}: the build has no {name}.dll.");
 
-    var bundled = Directory.GetFiles(output, "Aura.Presence.*.dll").Select(Path.GetFileNameWithoutExtension)
-        .Where(file => file == "Aura.Presence.Sdk" || file!.StartsWith("Aura.Presence.Services.", StringComparison.Ordinal)).ToList();
+    var bundled = Directory.GetFiles(output, "*.dll").Select(Path.GetFileNameWithoutExtension)
+        .Where(file => file is "Aura.Presence.Sdk" or "WinRT.Runtime" or "Microsoft.Windows.SDK.NET" ||
+                       file!.StartsWith("Aura.Presence.Services.", StringComparison.Ordinal)).ToList();
 
     if (bundled.Count > 0)
-        Fail($"{name}: the build contains {string.Join(", ", bundled)}, which Aura provides. Reference them with Private=\"false\" ExcludeAssets=\"runtime\".");
+        Fail($"{name}: the build contains {string.Join(", ", bundled)}, which Aura provides.");
 
     var built = AssemblyName.GetAssemblyName(assembly).Version!;
 

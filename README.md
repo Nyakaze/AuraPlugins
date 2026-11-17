@@ -28,7 +28,7 @@ F:\Projects\AuraPlugins
 
 Set `AuraRoot` to build against a checkout somewhere else. The workflow checks Aura out at the tag in `AURA_REF`. That tag is the oldest Aura these plugins work with; raise it when a plugin needs newer API.
 
-- `dotnet build AuraPlugins.slnx`: a Debug build also copies each plugin into the sibling Aura's `bin\Debug\net10.0-windows\plugins\`, where a Debug Aura loads it ahead of installed plugins.
+- `dotnet build AuraPlugins.slnx`: a Debug build also copies each plugin into the sibling Aura's `bin\Debug\net10.0-windows10.0.19041.0\plugins\`, where a Debug Aura loads it ahead of installed plugins.
 - `dotnet run pack.cs`: a dry run. It builds and zips into `dist/` and writes `dist/meta.json`; nothing is published.
 - `dotnet run StremioChecks.cs` and `dotnet run AniListSyncChecks.cs` in `tests/`.
 
