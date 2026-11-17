@@ -1,5 +1,45 @@
 {
   "name": "Aura",
   "url": "https://github.com/Nyakaze/AuraPlugins",
-  "plugins": []
+  "plugins": [
+    {
+      "internalName": "Aura.Presence.AniListSync",
+      "name": "AniList Sync",
+      "author": "Aura",
+      "description": "Marks the anime episodes you watch as watched on your AniList.",
+      "category": "Anime",
+      "uses": [
+        "What your video plugins report as playing",
+        "Your AniList account, after you sign in with your own AniList app"
+      ],
+      "showsActivity": false,
+      "repoUrl": "https://github.com/Nyakaze/AuraPlugins/tree/main/plugins/Aura.Presence.AniListSync",
+      "iconUrl": "plugins/Aura.Presence.AniListSync/icon.png",
+      "version": "1.0.0",
+      "sdkVersion": "1.0",
+      "downloadUrl": "https://github.com/Nyakaze/AuraPlugins/releases/download/Aura.Presence.AniListSync-1.0.0/Aura.Presence.AniListSync-1.0.0.zip",
+      "sha256": "0915155cd1d98b15cac2c1f65200beaf6e8aff4e53e825ff42b6ac22f61e653d",
+      "size": 24246
+    },
+    {
+      "internalName": "Aura.Presence.Stremio",
+      "name": "Stremio",
+      "author": "Aura",
+      "description": "Shows what you watch in Stremio on your profile. Nothing to set up.",
+      "category": "Video",
+      "uses": [
+        "Windows media controls, for what is playing",
+        "Stremio’s player and saved library, for titles and episodes",
+        "AniList and Cinemeta online, for posters and links"
+      ],
+      "showsActivity": true,
+      "repoUrl": "https://github.com/Nyakaze/AuraPlugins/tree/main/plugins/Aura.Presence.Stremio",
+      "iconUrl": "plugins/Aura.Presence.Stremio/icon.png",
+      "version": "1.0.0",
+      "sdkVersion": "1.0",
+      "downloadUrl": "https://github.com/Nyakaze/AuraPlugins/releases/download/Aura.Presence.Stremio-1.0.0/Aura.Presence.Stremio-1.0.0.zip",
+      "sha256": "53919908601606b782187c1ae7b868f4093b2ee34495d03748018580f7db68e1",
+      "size": 6683876
+    }
+  ]
 }
