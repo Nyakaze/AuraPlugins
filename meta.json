@@ -35,11 +35,11 @@
       "showsActivity": true,
       "repoUrl": "https://github.com/Nyakaze/AuraPlugins/tree/main/plugins/Aura.Presence.Stremio",
       "iconUrl": "plugins/Aura.Presence.Stremio/icon.png",
-      "version": "1.1.0",
-      "sdkVersion": "1.1",
-      "downloadUrl": "https://github.com/Nyakaze/AuraPlugins/releases/download/Aura.Presence.Stremio-1.1.0/Aura.Presence.Stremio-1.1.0.zip",
-      "sha256": "4ff56295d173a6491f1440fef0dac3730da586ea066fe010ded51cdfd9e9d88b",
-      "size": 6683583
+      "version": "1.1.1",
+      "sdkVersion": "1.2",
+      "downloadUrl": "https://github.com/Nyakaze/AuraPlugins/releases/download/Aura.Presence.Stremio-1.1.1/Aura.Presence.Stremio-1.1.1.zip",
+      "sha256": "052cce2654a59131f4d46d274a22eb207df8c18616742859bb90afebb0cf10c1",
+      "size": 61188
     }
   ]
 }
