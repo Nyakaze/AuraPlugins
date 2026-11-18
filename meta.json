@@ -22,6 +22,45 @@
       "size": 24246
     },
     {
+      "internalName": "Aura.Presence.MyAnimeListSync",
+      "name": "MyAnimeList Sync",
+      "author": "Aura",
+      "description": "Marks the anime episodes you watch as watched on your MyAnimeList.",
+      "category": "Anime",
+      "uses": [
+        "What your video plugins report as playing",
+        "Your MyAnimeList account, after you sign in with your own MyAnimeList client",
+        "Port 47301 on this PC, only while you sign in"
+      ],
+      "showsActivity": false,
+      "repoUrl": "https://github.com/Nyakaze/AuraPlugins/tree/main/plugins/Aura.Presence.MyAnimeListSync",
+      "iconUrl": "plugins/Aura.Presence.MyAnimeListSync/icon.png",
+      "version": "1.0.0",
+      "sdkVersion": "1.2",
+      "downloadUrl": "https://github.com/Nyakaze/AuraPlugins/releases/download/Aura.Presence.MyAnimeListSync-1.0.0/Aura.Presence.MyAnimeListSync-1.0.0.zip",
+      "sha256": "99dc865feba276d01dfba765ca682bc6d66041eedec218e9c9c422a3a03e9c95",
+      "size": 34595
+    },
+    {
+      "internalName": "Aura.Presence.SimklSync",
+      "name": "Simkl Sync",
+      "author": "Aura",
+      "description": "Marks the movies, episodes and anime you watch as watched on your Simkl.",
+      "category": "Video",
+      "uses": [
+        "What your video plugins report as playing",
+        "Your Simkl account, after you sign in with your own Simkl app"
+      ],
+      "showsActivity": false,
+      "repoUrl": "https://github.com/Nyakaze/AuraPlugins/tree/main/plugins/Aura.Presence.SimklSync",
+      "iconUrl": "plugins/Aura.Presence.SimklSync/icon.png",
+      "version": "1.0.0",
+      "sdkVersion": "1.2",
+      "downloadUrl": "https://github.com/Nyakaze/AuraPlugins/releases/download/Aura.Presence.SimklSync-1.0.0/Aura.Presence.SimklSync-1.0.0.zip",
+      "sha256": "f32028d9ae446209ec8eab31627286b57b666f2180b42527491a6f040e92b464",
+      "size": 32718
+    },
+    {
       "internalName": "Aura.Presence.Stremio",
       "name": "Stremio",
       "author": "Aura",
