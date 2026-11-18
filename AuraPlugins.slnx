@@ -3,6 +3,7 @@
     <Project Path="plugins/Aura.Presence.AniListSync/Aura.Presence.AniListSync.csproj" />
     <Project Path="plugins/Aura.Presence.MyAnimeListSync/Aura.Presence.MyAnimeListSync.csproj" />
     <Project Path="plugins/Aura.Presence.Netflix/Aura.Presence.Netflix.csproj" />
+    <Project Path="plugins/Aura.Presence.Roblox/Aura.Presence.Roblox.csproj" />
     <Project Path="plugins/Aura.Presence.SimklSync/Aura.Presence.SimklSync.csproj" />
     <Project Path="plugins/Aura.Presence.Stremio/Aura.Presence.Stremio.csproj" />
   </Folder>

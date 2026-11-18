@@ -1,0 +1,13 @@
+{
+  "name": "Roblox",
+  "author": "Aura",
+  "description": "Shows the Roblox game you play on your profile, with your avatar. Nothing to set up.",
+  "category": "Games",
+  "uses": [
+    "Whether Roblox is running, and its log file, for the game you are in and your user ID",
+    "Details games write to that log for Bloxstrap's rich presence (BloxstrapRPC)",
+    "Roblox's public game, avatar and image pages online, for names and pictures"
+  ],
+  "showsActivity": true,
+  "repoUrl": "https://github.com/Nyakaze/AuraPlugins/tree/main/plugins/Aura.Presence.Roblox"
+}

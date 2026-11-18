@@ -47,6 +47,7 @@ jobs:
           dotnet run MyAnimeListSyncChecks.cs
           dotnet run SimklSyncChecks.cs
           dotnet run NetflixChecks.cs
+          dotnet run RobloxChecks.cs
 
       - name: Pack and release new versions
         working-directory: AuraPlugins
