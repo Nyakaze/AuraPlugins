@@ -42,6 +42,28 @@
       "size": 34595
     },
     {
+      "internalName": "Aura.Presence.Netflix",
+      "name": "Netflix",
+      "author": "Aura",
+      "description": "Shows what you watch on Netflix in your browser on your profile.",
+      "category": "Video",
+      "uses": [
+        "The Netflix tab in your browser, for the title, episode and playback",
+        "Cinemeta online, for IMDb links your trackers use"
+      ],
+      "requires": [
+        "browserExtension"
+      ],
+      "showsActivity": true,
+      "repoUrl": "https://github.com/Nyakaze/AuraPlugins/tree/main/plugins/Aura.Presence.Netflix",
+      "iconUrl": "plugins/Aura.Presence.Netflix/icon.png",
+      "version": "1.0.0",
+      "sdkVersion": "1.3",
+      "downloadUrl": "https://github.com/Nyakaze/AuraPlugins/releases/download/Aura.Presence.Netflix-1.0.0/Aura.Presence.Netflix-1.0.0.zip",
+      "sha256": "d665a35c469bbe2d190908fd263861694d792ba6c6e2fa5a0de5b65e4db7c5cc",
+      "size": 30004
+    },
+    {
       "internalName": "Aura.Presence.SimklSync",
       "name": "Simkl Sync",
       "author": "Aura",
