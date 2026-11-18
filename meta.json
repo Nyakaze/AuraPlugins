@@ -64,6 +64,26 @@
       "size": 30004
     },
     {
+      "internalName": "Aura.Presence.Roblox",
+      "name": "Roblox",
+      "author": "Aura",
+      "description": "Shows the Roblox game you play on your profile, with your avatar. Nothing to set up.",
+      "category": "Games",
+      "uses": [
+        "Whether Roblox is running, and its log file, for the game you are in and your user ID",
+        "Details games write to that log for Bloxstrap's rich presence (BloxstrapRPC)",
+        "Roblox's public game, avatar and image pages online, for names and pictures"
+      ],
+      "showsActivity": true,
+      "repoUrl": "https://github.com/Nyakaze/AuraPlugins/tree/main/plugins/Aura.Presence.Roblox",
+      "iconUrl": "plugins/Aura.Presence.Roblox/icon.png",
+      "version": "1.0.0",
+      "sdkVersion": "1.3",
+      "downloadUrl": "https://github.com/Nyakaze/AuraPlugins/releases/download/Aura.Presence.Roblox-1.0.0/Aura.Presence.Roblox-1.0.0.zip",
+      "sha256": "0ecf744286e5359f79e8bb4c8b10cb3a301a1dcaa5717a0ef6fdb2df9af19731",
+      "size": 59574
+    },
+    {
       "internalName": "Aura.Presence.SimklSync",
       "name": "Simkl Sync",
       "author": "Aura",
