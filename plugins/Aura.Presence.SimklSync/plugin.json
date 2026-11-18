@@ -2,7 +2,7 @@
   "name": "Simkl Sync",
   "author": "Aura",
   "description": "Marks the movies, episodes and anime you watch as watched on your Simkl.",
-  "category": "Video",
+  "category": "Tracking",
   "uses": [
     "What your video plugins report as playing",
     "Your Simkl account, after you sign in with your own Simkl app"

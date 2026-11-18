@@ -2,7 +2,7 @@
   "name": "AniList Sync",
   "author": "Aura",
   "description": "Marks the anime episodes you watch as watched on your AniList.",
-  "category": "Anime",
+  "category": "Tracking",
   "uses": [
     "What your video plugins report as playing",
     "Your AniList account, after you sign in with your own AniList app"

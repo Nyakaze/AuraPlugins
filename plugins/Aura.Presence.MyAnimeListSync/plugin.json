@@ -2,7 +2,7 @@
   "name": "MyAnimeList Sync",
   "author": "Aura",
   "description": "Marks the anime episodes you watch as watched on your MyAnimeList.",
-  "category": "Anime",
+  "category": "Tracking",
   "uses": [
     "What your video plugins report as playing",
     "Your MyAnimeList account, after you sign in with your own MyAnimeList client",
