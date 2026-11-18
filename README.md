@@ -55,3 +55,5 @@ Set `AuraRoot` to build against a checkout somewhere else. The workflow checks A
 ## Custom repos
 
 Anyone can host a repo: a `meta.json` in this format at an https URL, with zips anywhere over https. In Aura, Marketplace → Repos → Add repo. A custom repo can't list a plugin under the same name as an official one.
+
+[Building a plugin for Aura](https://github.com/Nyakaze/AuraPresence/blob/master/docs/PLUGINS.md) covers writing a plugin, the meta.json fields, and reusing this repo's tooling for your own repo.
