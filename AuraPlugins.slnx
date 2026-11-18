@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/plugins/">
     <Project Path="plugins/Aura.Presence.AniListSync/Aura.Presence.AniListSync.csproj" />
+    <Project Path="plugins/Aura.Presence.MyAnimeListSync/Aura.Presence.MyAnimeListSync.csproj" />
     <Project Path="plugins/Aura.Presence.Stremio/Aura.Presence.Stremio.csproj" />
   </Folder>
   <Folder Name="/aura/">

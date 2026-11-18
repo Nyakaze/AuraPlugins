@@ -1,0 +1,13 @@
+{
+  "name": "MyAnimeList Sync",
+  "author": "Aura",
+  "description": "Marks the anime episodes you watch as watched on your MyAnimeList.",
+  "category": "Anime",
+  "uses": [
+    "What your video plugins report as playing",
+    "Your MyAnimeList account, after you sign in with your own MyAnimeList client",
+    "Port 47301 on this PC, only while you sign in"
+  ],
+  "showsActivity": false,
+  "repoUrl": "https://github.com/Nyakaze/AuraPlugins/tree/main/plugins/Aura.Presence.MyAnimeListSync"
+}
