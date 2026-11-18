@@ -15,7 +15,7 @@ permissions:
 concurrency: release
 
 env:
-  AURA_REF: v1.2.0
+  AURA_REF: v1.3.0
 
 defaults:
   run:
@@ -46,6 +46,7 @@ jobs:
           dotnet run AniListSyncChecks.cs
           dotnet run MyAnimeListSyncChecks.cs
           dotnet run SimklSyncChecks.cs
+          dotnet run NetflixChecks.cs
 
       - name: Pack and release new versions
         working-directory: AuraPlugins

@@ -8,6 +8,7 @@ The official plugins for [Aura](https://github.com/Nyakaze/AuraPresence), the Ri
 | [AniList Sync](plugins/Aura.Presence.AniListSync) | Marks the anime episodes you watch as watched on your AniList. |
 | [MyAnimeList Sync](plugins/Aura.Presence.MyAnimeListSync) | Marks the anime episodes you watch as watched on your MyAnimeList. |
 | [Simkl Sync](plugins/Aura.Presence.SimklSync) | Marks the movies, episodes and anime you watch as watched on your Simkl. |
+| [Netflix](plugins/Aura.Presence.Netflix) | Shows what you watch on Netflix in your browser on your profile. Needs the Aura browser extension. |
 
 ## How the repo works
 
@@ -32,7 +33,7 @@ Set `AuraRoot` to build against a checkout somewhere else. The workflow checks A
 
 - `dotnet build AuraPlugins.slnx`: a Debug build also copies each plugin into the sibling Aura's `bin\Debug\net10.0-windows10.0.19041.0\plugins\`, where a Debug Aura loads it ahead of installed plugins.
 - `dotnet run pack.cs`: a dry run. It builds and zips into `dist/` and writes `dist/meta.json`; nothing is published.
-- `dotnet run StremioChecks.cs`, `dotnet run AniListSyncChecks.cs`, `dotnet run MyAnimeListSyncChecks.cs` and `dotnet run SimklSyncChecks.cs` in `tests/`.
+- `dotnet run StremioChecks.cs`, `dotnet run AniListSyncChecks.cs`, `dotnet run MyAnimeListSyncChecks.cs`, `dotnet run SimklSyncChecks.cs` and `dotnet run NetflixChecks.cs` in `tests/`.
 
 ## Adding a plugin
 

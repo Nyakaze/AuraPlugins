@@ -1,0 +1,13 @@
+{
+  "name": "Netflix",
+  "author": "Aura",
+  "description": "Shows what you watch on Netflix in your browser on your profile.",
+  "category": "Video",
+  "uses": [
+    "The Netflix tab in your browser, for the title, episode and playback",
+    "Cinemeta online, for IMDb links your trackers use"
+  ],
+  "requires": ["browserExtension"],
+  "showsActivity": true,
+  "repoUrl": "https://github.com/Nyakaze/AuraPlugins/tree/main/plugins/Aura.Presence.Netflix"
+}
