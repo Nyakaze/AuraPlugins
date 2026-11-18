@@ -11,9 +11,11 @@ public sealed partial class StremioPlugin : IPresencePlugin
     private static readonly TimeSpan PollInterval = TimeSpan.FromSeconds(2);
     private static readonly TimeSpan RepublishInterval = TimeSpan.FromSeconds(15);
     private static readonly TimeSpan AllowedDrift = TimeSpan.FromSeconds(3);
+    private static readonly TimeSpan PausedHideDelay = TimeSpan.FromMinutes(5);
     private const int MissingPollsBeforeClear = 4;
     private const int PlayerReadAttempts = 15;
     private const string UnknownTitle = "Stremio";
+    private const string HideWhenPausedSetting = "hideWhenPaused";
 
     private readonly StremioMediaSession _session = new();
     private readonly StremioLibrary _library = new();
@@ -23,6 +25,8 @@ public sealed partial class StremioPlugin : IPresencePlugin
     private IPluginContext _context = null!;
     private CancellationTokenSource? _lifetime;
     private Task? _loop;
+    private bool _hideWhenPaused;
+    private DateTimeOffset? _pausedSince;
 
     private string? _fileName;
     private ReleaseName? _release;
@@ -48,9 +52,16 @@ public sealed partial class StremioPlugin : IPresencePlugin
 
     public string Description => "Reads what Stremio plays from Windows media controls and its saved library. Nothing to set up.";
 
+    public IReadOnlyList<PluginSetting> Settings =>
+    [
+        new ToggleSetting(HideWhenPausedSetting, "Hide when paused", false,
+            "Hides your Discord activity after 5 minutes paused. It comes back when you press play.")
+    ];
+
     public Task StartAsync(IPluginContext context, CancellationToken cancellationToken)
     {
         _context = context;
+        _hideWhenPaused = context.Settings.Get(HideWhenPausedSetting, false);
         _lifetime = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         _loop = Task.Run(() => RunAsync(_lifetime.Token), CancellationToken.None);
 
@@ -213,18 +224,29 @@ public sealed partial class StremioPlugin : IPresencePlugin
     private async Task ShowAsync(NowPlaying media)
     {
         var now = DateTimeOffset.UtcNow;
-        var startedAt = media.State is PlaybackState.Playing && media.Position is { } position
+        var startedAt = media.State is PlaybackState.Playing or PlaybackState.Paused && media.Position is { } position
             ? now - position
             : (DateTimeOffset?)null;
+        var allowedDrift = media.State is PlaybackState.Paused ? RepublishInterval : AllowedDrift;
         var activity = BuildActivity(media, startedAt);
+        _pausedSince = media.State is PlaybackState.Paused ? _pausedSince ?? now : null;
+        var hidden = HidesActivity(_hideWhenPaused, _pausedSince, now);
 
-        var unchanged = _shown is { } shown && shown.Details == activity.Details && shown.State == activity.State &&
-                        shown.Image == activity.LargeImage && shown.ButtonUrl == activity.Buttons[0].Url &&
-                        shown.EndsAt is null == activity.EndsAt is null &&
-                        (startedAt is null) == (shown.StartedAt is null) &&
-                        (startedAt is null || (startedAt.Value - shown.StartedAt!.Value).Duration() < AllowedDrift);
+        var unchanged = hidden
+            ? _shown is null
+            : _shown is { } shown && shown.Details == activity.Details && shown.State == activity.State &&
+              shown.Image == activity.LargeImage && shown.ButtonUrl == activity.Buttons[0].Url &&
+              shown.EndsAt is null == activity.EndsAt is null &&
+              (startedAt is null) == (shown.StartedAt is null) &&
+              (startedAt is null || (startedAt.Value - shown.StartedAt!.Value).Duration() < allowedDrift);
 
-        if (!unchanged)
+        if (!unchanged && hidden)
+        {
+            _shown = null;
+            await _context.Activity.ClearAsync();
+            _context.Log.Info("Paused for 5 minutes; hiding the activity until playback resumes.");
+        }
+        else if (!unchanged)
         {
             await _context.Activity.ReportAsync(activity);
             _shown = new ShownState(activity.Details, activity.State, activity.LargeImage, activity.Buttons[0].Url,
@@ -237,6 +259,9 @@ public sealed partial class StremioPlugin : IPresencePlugin
             _publishedAt = now;
         }
     }
+
+    public static bool HidesActivity(bool hideWhenPaused, DateTimeOffset? pausedSince, DateTimeOffset now) =>
+        hideWhenPaused && now - pausedSince >= PausedHideDelay;
 
     public static IReadOnlyDictionary<string, string> MergeIds(IReadOnlyDictionary<string, string>? entry,
         IReadOnlyDictionary<string, string>? lookup)
@@ -444,11 +469,13 @@ public sealed partial class StremioPlugin : IPresencePlugin
         _lookup = null;
         _episodeKey = null;
         _episodeTitle = null;
+        _pausedSince = null;
 
-        if (_shown is null)
+        if (_shown is null && _publishedAt == default)
             return;
 
         _shown = null;
+        _publishedAt = default;
         await _context.Activity.ClearAsync();
         await _context.Media.PublishAsync(null);
     }

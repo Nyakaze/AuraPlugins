@@ -79,6 +79,12 @@ Check(StremioPlugin.StateLine(show with { Kind = MediaKind.Other }) is null, "an
 Check(StremioPlugin.StateLine(show with { Kind = MediaKind.Other, State = PlaybackState.Paused }) == "Paused", "an unknown episode still shows pause");
 Check(StremioPlugin.StateLine(show with { Kind = MediaKind.Movie, Year = 2024 }) == "Movie (2024)", "movie state line");
 
+var pausedAt = DateTimeOffset.Parse("2026-11-18T12:00:00Z");
+Check(!StremioPlugin.HidesActivity(true, pausedAt, pausedAt.AddMinutes(4.9)), "a short pause keeps the activity");
+Check(StremioPlugin.HidesActivity(true, pausedAt, pausedAt.AddMinutes(5)), "5 minutes paused hides the activity");
+Check(!StremioPlugin.HidesActivity(false, pausedAt, pausedAt.AddHours(1)), "a long pause keeps the activity when the option is off");
+Check(!StremioPlugin.HidesActivity(true, null, pausedAt), "playing shows the activity");
+
 var playerText = PlayerTitle.Parse("The Iceblade Sorcerer Shall Rule the World - The Boy Who Is the World's Strongest Sorcerer Dons a Mask... Again (2x2)");
 Check(playerText is { Show: "The Iceblade Sorcerer Shall Rule the World", EpisodeName: "The Boy Who Is the World's Strongest Sorcerer Dons a Mask... Again", Season: 2, Episode: 2 },
     "player text gives show, episode name, season and episode");
