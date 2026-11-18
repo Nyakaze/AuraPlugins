@@ -45,6 +45,7 @@ jobs:
           dotnet run StremioChecks.cs
           dotnet run AniListSyncChecks.cs
           dotnet run MyAnimeListSyncChecks.cs
+          dotnet run SimklSyncChecks.cs
 
       - name: Pack and release new versions
         working-directory: AuraPlugins
