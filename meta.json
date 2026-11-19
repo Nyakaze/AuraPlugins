@@ -121,6 +121,27 @@
       "downloadUrl": "https://github.com/Nyakaze/AuraPlugins/releases/download/Aura.Presence.Stremio-1.1.2/Aura.Presence.Stremio-1.1.2.zip",
       "sha256": "b88686b946c9e102f72dbda1537aeb128542b703ba58624e1767709915cbee90",
       "size": 61837
+    },
+    {
+      "internalName": "Aura.Presence.Valorant",
+      "name": "Valorant",
+      "author": "Aura",
+      "description": "Shows your VALORANT mode, map, agent, score and party on your profile. Nothing to set up.",
+      "category": "Games",
+      "uses": [
+        "Whether VALORANT is running",
+        "The Riot Client's local connection on your PC (its lockfile), for your game state, party and rank",
+        "VALORANT's log file, for the agent you pick and when the match started",
+        "valorant-api.com, for map, agent and rank names and pictures"
+      ],
+      "showsActivity": true,
+      "repoUrl": "https://github.com/Nyakaze/AuraPlugins/tree/main/plugins/Aura.Presence.Valorant",
+      "iconUrl": "plugins/Aura.Presence.Valorant/icon.png",
+      "version": "1.0.0",
+      "sdkVersion": "1.4",
+      "downloadUrl": "https://github.com/Nyakaze/AuraPlugins/releases/download/Aura.Presence.Valorant-1.0.0/Aura.Presence.Valorant-1.0.0.zip",
+      "sha256": "1441b4654fc176fa2125ad521809b052770f2888ce8dcb1786d836f2eed00b84",
+      "size": 43898
     }
   ]
 }
