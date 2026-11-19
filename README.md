@@ -10,6 +10,7 @@ The official plugins for [Aura](https://github.com/Nyakaze/AuraPresence), the Ri
 | [Simkl Sync](plugins/Aura.Presence.SimklSync) | Marks the movies, episodes and anime you watch as watched on your Simkl. |
 | [Netflix](plugins/Aura.Presence.Netflix) | Shows what you watch on Netflix in your browser on your profile. Needs the Aura browser extension. |
 | [Roblox](plugins/Aura.Presence.Roblox) | Shows the Roblox game you play on your profile. Nothing to set up. |
+| [Valorant](plugins/Aura.Presence.Valorant) | Shows your VALORANT mode, map, agent, score and party on your profile. Nothing to set up. |
 
 ## How the repo works
 
@@ -34,7 +35,7 @@ Set `AuraRoot` to build against a checkout somewhere else. The workflow checks A
 
 - `dotnet build AuraPlugins.slnx`: a Debug build also copies each plugin into the sibling Aura's `bin\Debug\net10.0-windows10.0.19041.0\plugins\`, where a Debug Aura loads it ahead of installed plugins.
 - `dotnet run pack.cs`: a dry run. It builds and zips into `dist/` and writes `dist/meta.json`; nothing is published.
-- `dotnet run StremioChecks.cs`, `dotnet run AniListSyncChecks.cs`, `dotnet run MyAnimeListSyncChecks.cs`, `dotnet run SimklSyncChecks.cs`, `dotnet run NetflixChecks.cs` and `dotnet run RobloxChecks.cs` in `tests/`.
+- `dotnet run StremioChecks.cs`, `dotnet run AniListSyncChecks.cs`, `dotnet run MyAnimeListSyncChecks.cs`, `dotnet run SimklSyncChecks.cs`, `dotnet run NetflixChecks.cs`, `dotnet run RobloxChecks.cs` and `dotnet run ValorantChecks.cs` in `tests/`.
 
 ## Adding a plugin
 

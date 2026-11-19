@@ -15,7 +15,7 @@ permissions:
 concurrency: release
 
 env:
-  AURA_REF: v1.3.0
+  AURA_REF: v1.4.0
 
 defaults:
   run:
@@ -48,6 +48,7 @@ jobs:
           dotnet run SimklSyncChecks.cs
           dotnet run NetflixChecks.cs
           dotnet run RobloxChecks.cs
+          dotnet run ValorantChecks.cs
 
       - name: Pack and release new versions
         working-directory: AuraPlugins

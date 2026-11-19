@@ -6,6 +6,7 @@
     <Project Path="plugins/Aura.Presence.Roblox/Aura.Presence.Roblox.csproj" />
     <Project Path="plugins/Aura.Presence.SimklSync/Aura.Presence.SimklSync.csproj" />
     <Project Path="plugins/Aura.Presence.Stremio/Aura.Presence.Stremio.csproj" />
+    <Project Path="plugins/Aura.Presence.Valorant/Aura.Presence.Valorant.csproj" />
   </Folder>
   <Folder Name="/aura/">
     <Project Path="../AuraPresence/src/Aura.Presence.Sdk/Aura.Presence.Sdk.csproj" />

@@ -1,0 +1,14 @@
+{
+  "name": "Valorant",
+  "author": "Aura",
+  "description": "Shows your VALORANT mode, map, agent, score and party on your profile. Nothing to set up.",
+  "category": "Games",
+  "uses": [
+    "Whether VALORANT is running",
+    "The Riot Client's local connection on your PC (its lockfile), for your game state, party and rank",
+    "VALORANT's log file, for the agent you pick and when the match started",
+    "valorant-api.com, for map, agent and rank names and pictures"
+  ],
+  "showsActivity": true,
+  "repoUrl": "https://github.com/Nyakaze/AuraPlugins/tree/main/plugins/Aura.Presence.Valorant"
+}
