@@ -22,6 +22,28 @@
       "size": 24246
     },
     {
+      "internalName": "Aura.Presence.League",
+      "name": "League of Legends",
+      "author": "Aura",
+      "description": "Shows your League of Legends queue, champion, skin, KDA and party on your profile. Nothing to set up.",
+      "category": "Games",
+      "uses": [
+        "Whether League of Legends is running",
+        "The Riot Client's local connection on your PC (its lockfile), for your game state, champion, skin and rank",
+        "The League client's local connection on your PC (its lockfile), for your party size",
+        "League's live game data on your PC, for your KDA, CS and game time",
+        "CommunityDragon, for queue, champion, skin and rank names and pictures"
+      ],
+      "showsActivity": true,
+      "repoUrl": "https://github.com/Nyakaze/AuraPlugins/tree/main/plugins/Aura.Presence.League",
+      "iconUrl": "plugins/Aura.Presence.League/icon.png",
+      "version": "1.0.0",
+      "sdkVersion": "1.4",
+      "downloadUrl": "https://github.com/Nyakaze/AuraPlugins/releases/download/Aura.Presence.League-1.0.0/Aura.Presence.League-1.0.0.zip",
+      "sha256": "36016626f946fe7e7a6cd5ed125a99102b85b5b15041a8290ee2da3a23f723a8",
+      "size": 63023
+    },
+    {
       "internalName": "Aura.Presence.MyAnimeListSync",
       "name": "MyAnimeList Sync",
       "author": "Aura",
