@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/plugins/">
     <Project Path="plugins/Aura.Presence.AniListSync/Aura.Presence.AniListSync.csproj" />
+    <Project Path="plugins/Aura.Presence.League/Aura.Presence.League.csproj" />
     <Project Path="plugins/Aura.Presence.MyAnimeListSync/Aura.Presence.MyAnimeListSync.csproj" />
     <Project Path="plugins/Aura.Presence.Netflix/Aura.Presence.Netflix.csproj" />
     <Project Path="plugins/Aura.Presence.Roblox/Aura.Presence.Roblox.csproj" />
