@@ -9,6 +9,7 @@
     "VALORANT's log file, for the agent you pick and when the match started",
     "valorant-api.com, for map, agent and rank names and pictures"
   ],
+  "processes": ["VALORANT-Win64-Shipping"],
   "showsActivity": true,
   "repoUrl": "https://github.com/Nyakaze/AuraPlugins/tree/main/plugins/Aura.Presence.Valorant"
 }

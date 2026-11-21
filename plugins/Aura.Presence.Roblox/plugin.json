@@ -8,6 +8,7 @@
     "Details games write to that log for Bloxstrap's rich presence (BloxstrapRPC)",
     "Roblox's public game, avatar and image pages online, for names and pictures"
   ],
+  "processes": ["RobloxPlayerBeta"],
   "showsActivity": true,
   "repoUrl": "https://github.com/Nyakaze/AuraPlugins/tree/main/plugins/Aura.Presence.Roblox"
 }

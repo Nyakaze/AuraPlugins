@@ -10,6 +10,7 @@
     "League's live game data on your PC, for your KDA, CS and game time",
     "CommunityDragon, for queue, champion, skin and rank names and pictures"
   ],
+  "processes": ["LeagueClientUx", "League of Legends"],
   "showsActivity": true,
   "repoUrl": "https://github.com/Nyakaze/AuraPlugins/tree/main/plugins/Aura.Presence.League"
 }
