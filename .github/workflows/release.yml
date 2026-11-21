@@ -50,6 +50,7 @@ jobs:
           dotnet run RobloxChecks.cs
           dotnet run ValorantChecks.cs
           dotnet run LeagueChecks.cs
+          dotnet run WutheringWavesChecks.cs
 
       - name: Pack and release new versions
         working-directory: AuraPlugins

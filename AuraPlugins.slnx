@@ -8,6 +8,7 @@
     <Project Path="plugins/Aura.Presence.SimklSync/Aura.Presence.SimklSync.csproj" />
     <Project Path="plugins/Aura.Presence.Stremio/Aura.Presence.Stremio.csproj" />
     <Project Path="plugins/Aura.Presence.Valorant/Aura.Presence.Valorant.csproj" />
+    <Project Path="plugins/Aura.Presence.WutheringWaves/Aura.Presence.WutheringWaves.csproj" />
   </Folder>
   <Folder Name="/aura/">
     <Project Path="../AuraPresence/src/Aura.Presence.Sdk/Aura.Presence.Sdk.csproj" />

@@ -12,6 +12,7 @@ The official plugins for [Aura](https://github.com/Nyakaze/AuraPresence), the Ri
 | [Roblox](plugins/Aura.Presence.Roblox) | Shows the Roblox game you play on your profile. Nothing to set up. |
 | [Valorant](plugins/Aura.Presence.Valorant) | Shows your VALORANT mode, map, agent, score and party on your profile. Nothing to set up. |
 | [League of Legends](plugins/Aura.Presence.League) | Shows your League of Legends queue, champion, skin, KDA and party on your profile. Nothing to set up. |
+| [Wuthering Waves](plugins/Aura.Presence.WutheringWaves) | Shows Wuthering Waves on your profile with your Union Level and region. Nothing to set up. |
 
 ## How the repo works
 
@@ -36,7 +37,7 @@ Set `AuraRoot` to build against a checkout somewhere else. The workflow checks A
 
 - `dotnet build AuraPlugins.slnx`: a Debug build also copies each plugin into the sibling Aura's `bin\Debug\net10.0-windows10.0.19041.0\plugins\`, where a Debug Aura loads it ahead of installed plugins.
 - `dotnet run pack.cs`: a dry run. It builds and zips into `dist/` and writes `dist/meta.json`; nothing is published.
-- `dotnet run StremioChecks.cs`, `dotnet run AniListSyncChecks.cs`, `dotnet run MyAnimeListSyncChecks.cs`, `dotnet run SimklSyncChecks.cs`, `dotnet run NetflixChecks.cs`, `dotnet run RobloxChecks.cs`, `dotnet run ValorantChecks.cs` and `dotnet run LeagueChecks.cs` in `tests/`.
+- `dotnet run StremioChecks.cs`, `dotnet run AniListSyncChecks.cs`, `dotnet run MyAnimeListSyncChecks.cs`, `dotnet run SimklSyncChecks.cs`, `dotnet run NetflixChecks.cs`, `dotnet run RobloxChecks.cs`, `dotnet run ValorantChecks.cs`, `dotnet run LeagueChecks.cs` and `dotnet run WutheringWavesChecks.cs` in `tests/`.
 
 ## Adding a plugin
 

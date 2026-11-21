@@ -1,0 +1,13 @@
+{
+  "name": "Wuthering Waves",
+  "author": "Aura",
+  "description": "Shows Wuthering Waves on your profile with your Union Level and region. Nothing to set up.",
+  "category": "Games",
+  "uses": [
+    "Whether Wuthering Waves is running, and where it is installed",
+    "The game's settings file on your PC, for your Union Level and region (only while those are shown)",
+    "The names of the game's resource folders, for the game version"
+  ],
+  "showsActivity": true,
+  "repoUrl": "https://github.com/Nyakaze/AuraPlugins/tree/main/plugins/Aura.Presence.WutheringWaves"
+}
