@@ -164,6 +164,26 @@
       "downloadUrl": "https://github.com/Nyakaze/AuraPlugins/releases/download/Aura.Presence.Valorant-1.0.0/Aura.Presence.Valorant-1.0.0.zip",
       "sha256": "1441b4654fc176fa2125ad521809b052770f2888ce8dcb1786d836f2eed00b84",
       "size": 43898
+    },
+    {
+      "internalName": "Aura.Presence.WutheringWaves",
+      "name": "Wuthering Waves",
+      "author": "Aura",
+      "description": "Shows Wuthering Waves on your profile with your Union Level and region. Nothing to set up.",
+      "category": "Games",
+      "uses": [
+        "Whether Wuthering Waves is running, and where it is installed",
+        "The game's settings file on your PC, for your Union Level and region (only while those are shown)",
+        "The names of the game's resource folders, for the game version"
+      ],
+      "showsActivity": true,
+      "repoUrl": "https://github.com/Nyakaze/AuraPlugins/tree/main/plugins/Aura.Presence.WutheringWaves",
+      "iconUrl": "plugins/Aura.Presence.WutheringWaves/icon.png",
+      "version": "1.0.0",
+      "sdkVersion": "1.4",
+      "downloadUrl": "https://github.com/Nyakaze/AuraPlugins/releases/download/Aura.Presence.WutheringWaves-1.0.0/Aura.Presence.WutheringWaves-1.0.0.zip",
+      "sha256": "0f8753f4847294f742a91aa4076d4c3439147a2e43c2ce854f90bdf06cfb487f",
+      "size": 60364
     }
   ]
 }
