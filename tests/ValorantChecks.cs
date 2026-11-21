@@ -97,14 +97,15 @@ var ingame = lobby! with { SessionState = "INGAME", MatchMap = "/Game/Maps/Ascen
 var pick = ingame with { SessionState = "PREGAME" };
 var queue = lobby with { PartyState = "MATCHMAKING", QueueEntryTime = At("15:18:30.000") };
 var range = ingame with { MatchMap = "/Game/Maps/Poveglia/Range", QueueId = "" };
-Check(ValorantPlugin.StartedAt(lobby, null, phaseStart, gameStart, now) == gameStart, "the lobby counts from the game start");
-Check(ValorantPlugin.StartedAt(queue, null, phaseStart, gameStart, now) == At("15:18:30.000"), "the queue counts from entering it");
-Check(ValorantPlugin.StartedAt(queue with { QueueEntryTime = At("13:00:00.000") }, null, phaseStart, gameStart, now) == phaseStart,
+Check(ValorantPlugin.StartedAt(lobby, null, phaseStart, now) == phaseStart, "the lobby counts from entering it");
+Check(ValorantPlugin.StartedAt(lobby with { IsIdle = true }, null, phaseStart, now) == phaseStart, "idle keeps the lobby timer");
+Check(ValorantPlugin.StartedAt(queue, null, phaseStart, now) == At("15:18:30.000"), "the queue counts from entering it");
+Check(ValorantPlugin.StartedAt(queue with { QueueEntryTime = At("13:00:00.000") }, null, phaseStart, now) == phaseStart,
     "an old queue time is ignored");
-Check(ValorantPlugin.StartedAt(pick, oldMatch, phaseStart, gameStart, now) == At("15:10:23.730"), "agent select counts from the log");
-Check(ValorantPlugin.StartedAt(ingame, oldMatch, phaseStart, gameStart, now) == At("15:11:50.347"), "the match counts from the log");
-Check(ValorantPlugin.StartedAt(ingame, oldMatch with { InGameAt = null }, phaseStart, gameStart, now) == phaseStart, "no log time yet");
-Check(ValorantPlugin.StartedAt(range, oldMatch, phaseStart, gameStart, now) == phaseStart, "the Range never uses the log");
+Check(ValorantPlugin.StartedAt(pick, oldMatch, phaseStart, now) == At("15:10:23.730"), "agent select counts from the log");
+Check(ValorantPlugin.StartedAt(ingame, oldMatch, phaseStart, now) == At("15:11:50.347"), "the match counts from the log");
+Check(ValorantPlugin.StartedAt(ingame, oldMatch with { InGameAt = null }, phaseStart, now) == phaseStart, "no log time yet");
+Check(ValorantPlugin.StartedAt(range, oldMatch, phaseStart, now) == phaseStart, "the Range never uses the log");
 
 var all = new CardOptions(true, true, true);
 var ascent = parsedMaps["Ascent"];
@@ -113,19 +114,19 @@ var gold = new PresenceImage("https://media.valorant-api.com/competitivetiers/03
 var logo = new PresenceImage(ValorantPlugin.LogoUrl, "VALORANT");
 
 var lobbyCard = ValorantPlugin.Card(lobby, null, null, gameStart, all);
-Check(lobbyCard is { Kind: ActivityKind.Playing, Name: "VALORANT", Details: "Lobby · Competitive", State: "Open Party" } &&
+Check(lobbyCard is { Kind: ActivityKind.Playing, Name: "VALORANT", Details: "Lobby - Competitive", State: "Open Party" } &&
       lobbyCard.LargeImage == logo && lobbyCard.SmallImage == gold && lobbyCard.Party == new PresenceParty(2, 5) &&
       lobbyCard.StartedAt == gameStart, "lobby card");
 Check(lobbyCard == ValorantPlugin.Card(lobby, null, null, gameStart, all), "the same state gives an equal card");
 Check(ValorantPlugin.Card(lobby with { PartyAccessibility = "CLOSED" }, ascent, null, gameStart, all).State == "Closed Party", "closed party");
 var idle = ValorantPlugin.Card(lobby with { IsIdle = true }, ascent, null, gameStart, all);
-Check(idle is { Details: "Idle in Lobby" } && idle.LargeImage == new PresenceImage(ValorantPlugin.IdleUrl, "VALORANT · Idle"), "idle card");
-Check(ValorantPlugin.Card(queue, ascent, null, gameStart, all) is { Details: "In Queue · Competitive", State: null } queueCard &&
+Check(idle is { Details: "Idle in Lobby" } && idle.LargeImage == new PresenceImage(ValorantPlugin.IdleUrl, "VALORANT - Idle"), "idle card");
+Check(ValorantPlugin.Card(queue, ascent, null, gameStart, all) is { Details: "In Queue - Competitive", State: null } queueCard &&
       queueCard.LargeImage == logo && queueCard.SmallImage == gold, "queue card");
 
 var noMapYet = ValorantPlugin.Card(pick with { MatchMap = "" }, null, null, gameStart, all);
-Check(noMapYet is { Details: "Agent Select · Competitive", State: null } && noMapYet.LargeImage == logo, "agent select before the map is known");
-Check(ValorantPlugin.Card(ingame with { MatchMap = "" }, null, null, gameStart, all) is { Details: "Competitive", State: "7 – 5" },
+Check(noMapYet is { Details: "Agent Select - Competitive", State: null } && noMapYet.LargeImage == logo, "agent select before the map is known");
+Check(ValorantPlugin.Card(ingame with { MatchMap = "" }, null, null, gameStart, all) is { Details: "Competitive", State: "7 – 5 - Round 13" },
     "a match before the map is known");
 
 Check(ValorantPlugin.StartedFromLog(pick, oldMatch).Phase == "INGAME", "the log starts the match before the presence does");
@@ -134,14 +135,18 @@ Check(ValorantPlugin.StartedFromLog(lobby, oldMatch).Phase == "LOBBY", "the menu
 Check(ValorantPlugin.StartedFromLog(pick, null).Phase == "PREGAME", "no match, no change");
 
 var pickCard = ValorantPlugin.Card(pick, ascent, clove, gameStart, all);
-Check(pickCard is { Details: "Agent Select · Competitive", State: "Ascent" } && pickCard.LargeImage == new PresenceImage(ascent.Splash!, "Ascent") &&
+Check(pickCard is { Details: "Agent Select - Competitive", State: "Ascent" } && pickCard.LargeImage == new PresenceImage(ascent.Splash!, "Ascent") &&
       pickCard.SmallImage == new PresenceImage(clove.Icon, "Clove"), "agent select card");
 Check(ValorantPlugin.Card(pick, ascent, null, gameStart, all).SmallImage == gold, "no agent yet shows the rank");
 
 var matchCard = ValorantPlugin.Card(ingame, ascent, clove, gameStart, all);
-Check(matchCard is { Details: "Competitive · Ascent", State: "7 – 5" } && matchCard.SmallImage?.Text == "Clove" &&
+Check(matchCard is { Details: "Competitive - Ascent", State: "7 – 5 - Round 13" } && matchCard.SmallImage?.Text == "Clove" &&
       matchCard.Party == new PresenceParty(2, 5), "match card");
 Check(ValorantPlugin.Card(ingame with { QueueId = "deathmatch" }, ascent, clove, gameStart, all).State is null, "no score in Deathmatch");
+Check(ValorantPlugin.Card(ingame with { QueueId = "hurm", ScoreAlly = 64, ScoreEnemy = 58 }, ascent, clove, gameStart, all).State == "64 – 58",
+    "Team Deathmatch has kills, not rounds");
+Check(ValorantPlugin.Card(ingame with { QueueId = "", ProvisioningFlow = "CustomGame", ScoreAlly = 0, ScoreEnemy = 0 }, ascent, clove, gameStart, all)
+    .State == "0 – 0 - Round 1", "a custom game starts at round 1");
 var bare = ValorantPlugin.Card(ingame, ascent, null, gameStart, new CardOptions(false, false, false));
 Check(bare is { State: null, SmallImage: null, Party: null }, "every toggle off");
 Check(ValorantPlugin.Card(ingame, new ValorantMap("Bonsai", null), null, gameStart, all).LargeImage == new PresenceImage(ValorantPlugin.LogoUrl, "Bonsai"),

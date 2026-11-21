@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using Aura.Presence.Sdk;
 
 namespace Aura.Presence.Valorant;
@@ -36,6 +35,11 @@ public sealed class ValorantPlugin : IPresencePlugin
         ["skirmish2v2"] = "Skirmish 2v2"
     };
 
+    private static readonly HashSet<string> RoundModes = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "competitive", "unrated", "premier", "swiftplay", "spikerush", "onefa", "newmap"
+    };
+
     private static readonly string[] Ranks =
     [
         "Unranked", "Unused", "Unused",
@@ -56,7 +60,6 @@ public sealed class ValorantPlugin : IPresencePlugin
     private Task? _loop;
     private CardOptions _options = new(true, true, true);
     private int? _gameId;
-    private DateTimeOffset _gameSeenAt;
     private ValorantLog _log = new(ValorantLog.GamePath);
     private string _phase = "";
     private DateTimeOffset _phaseStart;
@@ -76,7 +79,7 @@ public sealed class ValorantPlugin : IPresencePlugin
     [
         new ToggleSetting(RankSetting, "Show rank", true, "Your rank icon while no agent is shown, such as in the lobby or queue."),
         new ToggleSetting(PartySetting, "Show party", true, "Your party size, and whether your party is open."),
-        new ToggleSetting(ScoreSetting, "Show score", true, "The live round score during a match.")
+        new ToggleSetting(ScoreSetting, "Show score", true, "The live score and round during a match.")
     ];
 
     public Task StartAsync(IPluginContext context, CancellationToken cancellationToken)
@@ -127,22 +130,20 @@ public sealed class ValorantPlugin : IPresencePlugin
             "INGAME" when presence.IsRange => card with { Details = "In the Range", LargeImage = mapImage, Party = null },
             "INGAME" => card with
             {
-                Details = map is null ? mode : $"{mode} · {map.Name}",
-                State = options.ShowScore && !presence.QueueId.Equals("deathmatch", StringComparison.OrdinalIgnoreCase)
-                    ? $"{presence.ScoreAlly} – {presence.ScoreEnemy}"
-                    : null,
+                Details = map is null ? mode : $"{mode} - {map.Name}",
+                State = options.ShowScore ? ScoreLine(presence) : null,
                 LargeImage = mapImage,
                 SmallImage = pick
             },
-            "PREGAME" => card with { Details = $"Agent Select · {mode}", State = map?.Name, LargeImage = mapImage, SmallImage = pick },
-            "QUEUE" => card with { Details = $"In Queue · {mode}" },
+            "PREGAME" => card with { Details = $"Agent Select - {mode}", State = map?.Name, LargeImage = mapImage, SmallImage = pick },
+            "QUEUE" => card with { Details = $"In Queue - {mode}" },
             _ when presence.IsIdle => card with
             {
                 Details = "Idle in Lobby",
                 State = partyLine,
-                LargeImage = new PresenceImage(IdleUrl, "VALORANT · Idle")
+                LargeImage = new PresenceImage(IdleUrl, "VALORANT - Idle")
             },
-            _ => card with { Details = $"Lobby · {mode}", State = partyLine }
+            _ => card with { Details = $"Lobby - {mode}", State = partyLine }
         };
     }
 
@@ -154,14 +155,20 @@ public sealed class ValorantPlugin : IPresencePlugin
     public static ValorantPresence StartedFromLog(ValorantPresence presence, LogMatch? match) =>
         presence.SessionState == "PREGAME" && match?.InGameAt is not null ? presence with { SessionState = "INGAME" } : presence;
 
-    public static DateTimeOffset StartedAt(ValorantPresence presence, LogMatch? match, DateTimeOffset phaseStart,
-        DateTimeOffset gameSeenAt, DateTimeOffset now) => presence.Phase switch
-    {
-        "QUEUE" => presence.QueueEntryTime is { } entry && now - entry >= TimeSpan.Zero && now - entry < MaxQueueAge ? entry : phaseStart,
-        "PREGAME" => match?.FirstSeen ?? phaseStart,
-        "INGAME" => (presence.IsRange ? null : match?.InGameAt) ?? phaseStart,
-        _ => gameSeenAt
-    };
+    public static DateTimeOffset StartedAt(ValorantPresence presence, LogMatch? match, DateTimeOffset phaseStart, DateTimeOffset now) =>
+        presence.Phase switch
+        {
+            "QUEUE" => presence.QueueEntryTime is { } entry && now - entry >= TimeSpan.Zero && now - entry < MaxQueueAge ? entry : phaseStart,
+            "PREGAME" => match?.FirstSeen ?? phaseStart,
+            "INGAME" => (presence.IsRange ? null : match?.InGameAt) ?? phaseStart,
+            _ => phaseStart
+        };
+
+    private static string? ScoreLine(ValorantPresence presence) =>
+        presence.QueueId.Equals("deathmatch", StringComparison.OrdinalIgnoreCase) ? null
+        : RoundModes.Contains(presence.QueueId) || presence.IsCustomGame
+            ? $"{presence.ScoreAlly} – {presence.ScoreEnemy} - Round {presence.ScoreAlly + presence.ScoreEnemy + 1}"
+            : $"{presence.ScoreAlly} – {presence.ScoreEnemy}";
 
     public static string ModeName(ValorantPresence presence) =>
         presence.IsCustomGame ? "Custom Game"
@@ -203,7 +210,7 @@ public sealed class ValorantPlugin : IPresencePlugin
 
     private async Task PollAsync(CancellationToken token)
     {
-        if (Game() is not { } game)
+        if (GameId() is not { } gameId)
         {
             _context.ReportHealth(PluginHealth.Waiting, "VALORANT isn't open.");
             _gameId = null;
@@ -211,10 +218,9 @@ public sealed class ValorantPlugin : IPresencePlugin
             return;
         }
 
-        if (game.Id != _gameId)
+        if (gameId != _gameId)
         {
-            _gameId = game.Id;
-            _gameSeenAt = game.StartedAt ?? DateTimeOffset.UtcNow;
+            _gameId = gameId;
             _log = new ValorantLog(ValorantLog.GamePath);
             _phase = "";
             _menusSeenAt = null;
@@ -287,7 +293,7 @@ public sealed class ValorantPlugin : IPresencePlugin
         }
 
         return Card(presence, _client.Map(presence.MapCode), _client.Agent(match?.Agent),
-            StartedAt(presence, match, _phaseStart, _gameSeenAt, now), _options);
+            StartedAt(presence, match, _phaseStart, now), _options);
     }
 
     private async Task ShowAsync(PresenceActivity? activity)
@@ -303,23 +309,13 @@ public sealed class ValorantPlugin : IPresencePlugin
             await _context.Activity.ReportAsync(activity);
     }
 
-    private static (int Id, DateTimeOffset? StartedAt)? Game()
+    private static int? GameId()
     {
         var processes = System.Diagnostics.Process.GetProcessesByName(ProcessName);
 
         try
         {
-            if (processes.Length == 0)
-                return null;
-
-            try
-            {
-                return (processes[0].Id, new DateTimeOffset(processes[0].StartTime));
-            }
-            catch (Exception exception) when (exception is InvalidOperationException or Win32Exception)
-            {
-                return (processes[0].Id, null);
-            }
+            return processes.Length == 0 ? null : processes[0].Id;
         }
         finally
         {
