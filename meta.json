@@ -159,11 +159,11 @@
       "showsActivity": true,
       "repoUrl": "https://github.com/Nyakaze/AuraPlugins/tree/main/plugins/Aura.Presence.Valorant",
       "iconUrl": "plugins/Aura.Presence.Valorant/icon.png",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "sdkVersion": "1.4",
-      "downloadUrl": "https://github.com/Nyakaze/AuraPlugins/releases/download/Aura.Presence.Valorant-1.0.1/Aura.Presence.Valorant-1.0.1.zip",
-      "sha256": "4d181d495476c1acc3169a3d1380e1661e9b1ee79df70c697d39f33489c9bb11",
-      "size": 43740
+      "downloadUrl": "https://github.com/Nyakaze/AuraPlugins/releases/download/Aura.Presence.Valorant-1.0.2/Aura.Presence.Valorant-1.0.2.zip",
+      "sha256": "cb082a044310803edf9ac4ad5d9732645b5c301fcf60674763f1704d7247bd13",
+      "size": 43987
     },
     {
       "internalName": "Aura.Presence.WutheringWaves",
