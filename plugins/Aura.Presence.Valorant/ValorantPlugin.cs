@@ -2,7 +2,7 @@ using Aura.Presence.Sdk;
 
 namespace Aura.Presence.Valorant;
 
-public sealed record CardOptions(bool ShowRank, bool ShowParty, bool ShowScore);
+public sealed record CardOptions(bool ShowRank, bool ShowParty, bool ShowScore, bool ShowRound);
 
 public sealed class ValorantPlugin : IPresencePlugin
 {
@@ -13,6 +13,7 @@ public sealed class ValorantPlugin : IPresencePlugin
     private const string RankSetting = "showRank";
     private const string PartySetting = "showParty";
     private const string ScoreSetting = "showScore";
+    private const string RoundSetting = "showRound";
     private const string RankIcons = "https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04";
 
     private static readonly TimeSpan PollInterval = TimeSpan.FromSeconds(1);
@@ -58,7 +59,7 @@ public sealed class ValorantPlugin : IPresencePlugin
     private IPluginContext _context = null!;
     private CancellationTokenSource? _lifetime;
     private Task? _loop;
-    private CardOptions _options = new(true, true, true);
+    private CardOptions _options = new(true, true, true, false);
     private int? _gameId;
     private ValorantLog _log = new(ValorantLog.GamePath);
     private string _phase = "";
@@ -79,14 +80,15 @@ public sealed class ValorantPlugin : IPresencePlugin
     [
         new ToggleSetting(RankSetting, "Show rank", true, "Your rank icon while no agent is shown, such as in the lobby or queue."),
         new ToggleSetting(PartySetting, "Show party", true, "Your party size, and whether your party is open."),
-        new ToggleSetting(ScoreSetting, "Show score", true, "The live score and round during a match.")
+        new ToggleSetting(ScoreSetting, "Show score", true, "The live score during a match."),
+        new ToggleSetting(RoundSetting, "Show round", false, "The current round number during a match.")
     ];
 
     public Task StartAsync(IPluginContext context, CancellationToken cancellationToken)
     {
         _context = context;
         _options = new CardOptions(context.Settings.Get(RankSetting, true), context.Settings.Get(PartySetting, true),
-            context.Settings.Get(ScoreSetting, true));
+            context.Settings.Get(ScoreSetting, true), context.Settings.Get(RoundSetting, false));
         _lifetime = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         _loop = Task.Run(() => RunAsync(_lifetime.Token), CancellationToken.None);
 
@@ -131,7 +133,7 @@ public sealed class ValorantPlugin : IPresencePlugin
             "INGAME" => card with
             {
                 Details = map is null ? mode : $"{mode} - {map.Name}",
-                State = options.ShowScore ? ScoreLine(presence) : null,
+                State = ScoreLine(presence, options),
                 LargeImage = mapImage,
                 SmallImage = pick
             },
@@ -164,11 +166,20 @@ public sealed class ValorantPlugin : IPresencePlugin
             _ => phaseStart
         };
 
-    private static string? ScoreLine(ValorantPresence presence) =>
-        presence.QueueId.Equals("deathmatch", StringComparison.OrdinalIgnoreCase) ? null
-        : RoundModes.Contains(presence.QueueId) || presence.IsCustomGame
-            ? $"{presence.ScoreAlly} – {presence.ScoreEnemy} - Round {presence.ScoreAlly + presence.ScoreEnemy + 1}"
-            : $"{presence.ScoreAlly} – {presence.ScoreEnemy}";
+    private static string? ScoreLine(ValorantPresence presence, CardOptions options)
+    {
+        string?[] parts =
+        [
+            options.ShowScore && !presence.QueueId.Equals("deathmatch", StringComparison.OrdinalIgnoreCase)
+                ? $"{presence.ScoreAlly} – {presence.ScoreEnemy}"
+                : null,
+            options.ShowRound && (RoundModes.Contains(presence.QueueId) || presence.IsCustomGame)
+                ? $"Round {presence.ScoreAlly + presence.ScoreEnemy + 1}"
+                : null
+        ];
+
+        return string.Join(" - ", parts.OfType<string>()) is { Length: > 0 } line ? line : null;
+    }
 
     public static string ModeName(ValorantPresence presence) =>
         presence.IsCustomGame ? "Custom Game"

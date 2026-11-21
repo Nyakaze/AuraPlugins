@@ -107,7 +107,7 @@ Check(ValorantPlugin.StartedAt(ingame, oldMatch, phaseStart, now) == At("15:11:5
 Check(ValorantPlugin.StartedAt(ingame, oldMatch with { InGameAt = null }, phaseStart, now) == phaseStart, "no log time yet");
 Check(ValorantPlugin.StartedAt(range, oldMatch, phaseStart, now) == phaseStart, "the Range never uses the log");
 
-var all = new CardOptions(true, true, true);
+var all = new CardOptions(true, true, true, true);
 var ascent = parsedMaps["Ascent"];
 var clove = new ValorantAgent("Clove", "https://media.valorant-api.com/agents/c/displayicon.png");
 var gold = new PresenceImage("https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/13/smallicon.png", "Gold 2");
@@ -147,7 +147,13 @@ Check(ValorantPlugin.Card(ingame with { QueueId = "hurm", ScoreAlly = 64, ScoreE
     "Team Deathmatch has kills, not rounds");
 Check(ValorantPlugin.Card(ingame with { QueueId = "", ProvisioningFlow = "CustomGame", ScoreAlly = 0, ScoreEnemy = 0 }, ascent, clove, gameStart, all)
     .State == "0 – 0 - Round 1", "a custom game starts at round 1");
-var bare = ValorantPlugin.Card(ingame, ascent, null, gameStart, new CardOptions(false, false, false));
+Check(ValorantPlugin.Card(ingame, ascent, clove, gameStart, new CardOptions(true, true, true, false)).State == "7 – 5",
+    "the round is off by default");
+Check(ValorantPlugin.Card(ingame, ascent, clove, gameStart, new CardOptions(true, true, false, true)).State == "Round 13",
+    "the round without the score");
+Check(ValorantPlugin.Card(ingame with { QueueId = "deathmatch" }, ascent, clove, gameStart, new CardOptions(true, true, false, true)).State is null,
+    "no round in Deathmatch");
+var bare = ValorantPlugin.Card(ingame, ascent, null, gameStart, new CardOptions(false, false, false, false));
 Check(bare is { State: null, SmallImage: null, Party: null }, "every toggle off");
 Check(ValorantPlugin.Card(ingame, new ValorantMap("Bonsai", null), null, gameStart, all).LargeImage == new PresenceImage(ValorantPlugin.LogoUrl, "Bonsai"),
     "an unknown map keeps the logo");
