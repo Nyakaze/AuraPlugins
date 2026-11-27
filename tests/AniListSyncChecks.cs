@@ -49,14 +49,14 @@ Check(AniListSyncPlugin.Accepts("Overlord", 3, new AniListMedia(101474, AniListM
 Check(!AniListSyncPlugin.Accepts("Breaking Bad", null, seasonOne, strict: true), "unrelated titles never match");
 Check(AniListSyncPlugin.Accepts("Pokemon", null, new AniListMedia(1, AniListMediaType.Anime, "Pokémon", null), strict: true), "accents are ignored");
 
-Check(AniListSyncPlugin.StatusFor(4, new AniListEntry(1, "Show", 12, 3, "CURRENT")) == "CURRENT", "next episode is current");
-Check(AniListSyncPlugin.StatusFor(4, new AniListEntry(1, "Show", 12, null, null)) == "CURRENT", "first watch adds the entry");
-Check(AniListSyncPlugin.StatusFor(12, new AniListEntry(1, "Show", 12, 11, "CURRENT")) == "COMPLETED", "last episode completes");
-Check(AniListSyncPlugin.StatusFor(4, new AniListEntry(1, "Show", null, 3, "CURRENT")) == "CURRENT", "airing show without a total");
-Check(AniListSyncPlugin.StatusFor(4, new AniListEntry(1, "Show", 12, 1, "REPEATING")) == "REPEATING", "a rewatch stays a rewatch");
-Check(AniListSyncPlugin.StatusFor(4, new AniListEntry(1, "Show", 12, 4, "CURRENT")) is null, "already watched is skipped");
-Check(AniListSyncPlugin.StatusFor(4, new AniListEntry(1, "Show", 12, 12, "COMPLETED")) is null, "completed is skipped");
-Check(AniListSyncPlugin.StatusFor(13, new AniListEntry(1, "Show", 12, 3, "CURRENT")) is null, "an episode past the total is skipped");
+Check(AniListSyncPlugin.StatusFor(4, new AniListEntry(1, "Show", 12, 3, "CURRENT"), addToList: true) == "CURRENT", "next episode is current");
+Check(AniListSyncPlugin.StatusFor(4, new AniListEntry(1, "Show", 12, null, null), addToList: true) == "CURRENT", "first watch adds the entry");
+Check(AniListSyncPlugin.StatusFor(12, new AniListEntry(1, "Show", 12, 11, "CURRENT"), addToList: true) == "COMPLETED", "last episode completes");
+Check(AniListSyncPlugin.StatusFor(4, new AniListEntry(1, "Show", null, 3, "CURRENT"), addToList: true) == "CURRENT", "airing show without a total");
+Check(AniListSyncPlugin.StatusFor(4, new AniListEntry(1, "Show", 12, 1, "REPEATING"), addToList: true) == "REPEATING", "a rewatch stays a rewatch");
+Check(AniListSyncPlugin.StatusFor(4, new AniListEntry(1, "Show", 12, 4, "CURRENT"), addToList: true) is null, "already watched is skipped");
+Check(AniListSyncPlugin.StatusFor(4, new AniListEntry(1, "Show", 12, 12, "COMPLETED"), addToList: true) is null, "completed is skipped");
+Check(AniListSyncPlugin.StatusFor(13, new AniListEntry(1, "Show", 12, 3, "CURRENT"), addToList: true) is null, "an episode past the total is skipped");
 
 var setup = new Store();
 Check(AniListSyncPlugin.SetupStep(setup) == 1, "setup starts with creating a client");
@@ -70,6 +70,13 @@ setup.Set(AniListSyncPlugin.TokenSetting, "token");
 Check(AniListSyncPlugin.SetupStep(setup) is null, "a token finishes setup");
 setup.Set(AniListSyncPlugin.TokenSetting, "");
 Check(AniListSyncPlugin.SetupStep(setup) == 2, "signing out goes back to sign-in");
+
+Check(AniListSyncPlugin.StatusFor(3, new AniListEntry(1, "X", 12, null, null), addToList: true) == "CURRENT", "a show not on the list is added as watching");
+Check(AniListSyncPlugin.StatusFor(3, new AniListEntry(1, "X", 12, 1, "PLANNING"), addToList: true) == "CURRENT", "a planned show moves to watching");
+Check(AniListSyncPlugin.StatusFor(3, new AniListEntry(1, "X", 12, null, null), addToList: false) is null, "adding off leaves a show not on the list alone");
+Check(AniListSyncPlugin.StatusFor(3, new AniListEntry(1, "X", 12, 1, "PLANNING"), addToList: false) is null, "adding off leaves a planned show alone");
+Check(AniListSyncPlugin.StatusFor(3, new AniListEntry(1, "X", 12, 2, "CURRENT"), addToList: false) == "CURRENT", "adding off still updates a watching show");
+Check(AniListSyncPlugin.StatusFor(3, new AniListEntry(1, "X", 12, 2, "REPEATING"), addToList: false) == "REPEATING", "adding off still updates a rewatch");
 
 Console.WriteLine("All AniList sync checks passed.");
 

@@ -13,6 +13,7 @@ public sealed class MyAnimeListSyncPlugin : IPresencePlugin
     public const string VerifierSetting = "signInVerifier";
     public const string ThresholdSetting = "watchedPercent";
     public const int DefaultThreshold = 80;
+    public const string AddToListSetting = "addToWatching";
     public const string Redirect = "http://localhost:47301/";
 
     private static readonly Uri ClientsPage = new("https://myanimelist.net/apiconfig");
@@ -24,6 +25,7 @@ public sealed class MyAnimeListSyncPlugin : IPresencePlugin
     private WatchTracker _tracker = null!;
     private IDisposable? _subscription;
     private int _threshold;
+    private bool _addToList;
     private volatile string? _accountName;
     private string? _watching;
 
@@ -39,6 +41,9 @@ public sealed class MyAnimeListSyncPlugin : IPresencePlugin
     [
         new NumberSetting(ThresholdSetting, "Mark as watched at", DefaultThreshold, 50, 100, "%",
                 "How much of an episode you watch before it counts.")
+            { ShowWhen = settings => SetupStep(settings) is null, Card = "sync" },
+        new ToggleSetting(AddToListSetting, "Add to Watching", true,
+                "Puts a show on your Watching list as you watch it, also from Plan to Watch, On Hold or Dropped. Off: only shows already on Watching are updated.")
             { ShowWhen = settings => SetupStep(settings) is null, Card = "sync" },
         new TextSetting(TokenSetting, _accountName is { } name ? $"Signed in as {name}" : "MyAnimeList account", "",
                 "Your access token. Click it to see it, or clear it to sign out.", Monospace: true, Secret: true)
@@ -109,9 +114,9 @@ public sealed class MyAnimeListSyncPlugin : IPresencePlugin
     public static bool Accepts(string title, int? season, MalAnime candidate, bool strict) =>
         TitleMatches(title, season, candidate.English, strict) || TitleMatches(title, season, candidate.Title, strict);
 
-    public static (string Status, bool Rewatching)? StatusFor(int episode, MalAnime anime)
+    public static (string Status, bool Rewatching)? StatusFor(int episode, MalAnime anime, bool addToList)
     {
-        if (anime.Watched >= episode || anime.Episodes < episode)
+        if (anime.Watched >= episode || anime.Episodes < episode || !addToList && anime.Status != "watching" && !anime.Rewatching)
             return null;
 
         return anime.Episodes <= episode ? ("completed", false) : anime.Rewatching ? ("completed", true) : ("watching", false);
@@ -140,6 +145,7 @@ public sealed class MyAnimeListSyncPlugin : IPresencePlugin
     {
         var settings = _context.Settings;
         _threshold = Math.Clamp(settings.Get(ThresholdSetting, DefaultThreshold), 50, 100);
+        _addToList = settings.Get(AddToListSetting, true);
         _account = new MyAnimeListAccount(_http, settings.Get(ClientIdSetting, ""),
             new MalTokens(settings.Get(TokenSetting, ""), settings.Get(RefreshTokenSetting, "")), Save);
         _tracker = new WatchTracker(_threshold);
@@ -298,9 +304,9 @@ public sealed class MyAnimeListSyncPlugin : IPresencePlugin
                 return;
             }
 
-            if (StatusFor(episode, anime) is not { } next)
+            if (StatusFor(episode, anime, _addToList) is not { } next)
             {
-                _context.Log.Info($"Skipped {label} on {anime.Title} ({id}): watched {anime.Watched?.ToString() ?? "none"} of {anime.Episodes?.ToString() ?? "?"}.");
+                _context.Log.Info($"Skipped {label} on {anime.Title} ({id}): {anime.Status ?? "not on your list"}, watched {anime.Watched?.ToString() ?? "none"} of {anime.Episodes?.ToString() ?? "?"}.");
                 return;
             }
 

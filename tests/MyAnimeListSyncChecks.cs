@@ -42,16 +42,16 @@ Check(!MyAnimeListSyncPlugin.Accepts("Frieren", 1, seasonOne, strict: true), "st
 Check(MyAnimeListSyncPlugin.Accepts("Frieren: Beyond Journey's End", 2, seasonTwo, strict: true), "season 2 starts with the base title");
 Check(!MyAnimeListSyncPlugin.Accepts("Frieren: Beyond Journey's End", 2, seasonOne, strict: true), "season 2 never takes season 1");
 
-Check(MyAnimeListSyncPlugin.StatusFor(4, new MalAnime(1, "Show", null, 12, 3, "watching")) == ("watching", false), "next episode is watching");
-Check(MyAnimeListSyncPlugin.StatusFor(4, new MalAnime(1, "Show", null, 12)) == ("watching", false), "first watch adds the entry");
-Check(MyAnimeListSyncPlugin.StatusFor(4, new MalAnime(1, "Show", null, 12, 0, "plan_to_watch")) == ("watching", false), "planned becomes watching");
-Check(MyAnimeListSyncPlugin.StatusFor(12, new MalAnime(1, "Show", null, 12, 11, "watching")) == ("completed", false), "last episode completes");
-Check(MyAnimeListSyncPlugin.StatusFor(4, new MalAnime(1, "Show", null, null, 3, "watching")) == ("watching", false), "airing show without a total");
-Check(MyAnimeListSyncPlugin.StatusFor(4, new MalAnime(1, "Show", null, 12, 1, "completed", true)) == ("completed", true), "a rewatch stays a rewatch");
-Check(MyAnimeListSyncPlugin.StatusFor(12, new MalAnime(1, "Show", null, 12, 11, "completed", true)) == ("completed", false), "finishing a rewatch ends it");
-Check(MyAnimeListSyncPlugin.StatusFor(4, new MalAnime(1, "Show", null, 12, 4, "watching")) is null, "already watched is skipped");
-Check(MyAnimeListSyncPlugin.StatusFor(4, new MalAnime(1, "Show", null, 12, 12, "completed")) is null, "completed is skipped");
-Check(MyAnimeListSyncPlugin.StatusFor(13, new MalAnime(1, "Show", null, 12, 3, "watching")) is null, "an episode past the total is skipped");
+Check(MyAnimeListSyncPlugin.StatusFor(4, new MalAnime(1, "Show", null, 12, 3, "watching"), addToList: true) == ("watching", false), "next episode is watching");
+Check(MyAnimeListSyncPlugin.StatusFor(4, new MalAnime(1, "Show", null, 12), addToList: true) == ("watching", false), "first watch adds the entry");
+Check(MyAnimeListSyncPlugin.StatusFor(4, new MalAnime(1, "Show", null, 12, 0, "plan_to_watch"), addToList: true) == ("watching", false), "planned becomes watching");
+Check(MyAnimeListSyncPlugin.StatusFor(12, new MalAnime(1, "Show", null, 12, 11, "watching"), addToList: true) == ("completed", false), "last episode completes");
+Check(MyAnimeListSyncPlugin.StatusFor(4, new MalAnime(1, "Show", null, null, 3, "watching"), addToList: true) == ("watching", false), "airing show without a total");
+Check(MyAnimeListSyncPlugin.StatusFor(4, new MalAnime(1, "Show", null, 12, 1, "completed", true), addToList: true) == ("completed", true), "a rewatch stays a rewatch");
+Check(MyAnimeListSyncPlugin.StatusFor(12, new MalAnime(1, "Show", null, 12, 11, "completed", true), addToList: true) == ("completed", false), "finishing a rewatch ends it");
+Check(MyAnimeListSyncPlugin.StatusFor(4, new MalAnime(1, "Show", null, 12, 4, "watching"), addToList: true) is null, "already watched is skipped");
+Check(MyAnimeListSyncPlugin.StatusFor(4, new MalAnime(1, "Show", null, 12, 12, "completed"), addToList: true) is null, "completed is skipped");
+Check(MyAnimeListSyncPlugin.StatusFor(13, new MalAnime(1, "Show", null, 12, 3, "watching"), addToList: true) is null, "an episode past the total is skipped");
 
 var setup = new Store();
 Check(MyAnimeListSyncPlugin.SetupStep(setup) == 1, "setup starts with creating a client");
@@ -68,6 +68,13 @@ setup.Set(MyAnimeListSyncPlugin.TokenSetting, "token");
 Check(MyAnimeListSyncPlugin.SetupStep(setup) is null, "a token finishes setup");
 setup.Set(MyAnimeListSyncPlugin.TokenSetting, "");
 Check(MyAnimeListSyncPlugin.SetupStep(setup) == 2, "signing out goes back to sign-in");
+
+Check(MyAnimeListSyncPlugin.StatusFor(3, new MalAnime(1, "X", null, 12), addToList: true) == ("watching", false), "a show not on the list is added as watching");
+Check(MyAnimeListSyncPlugin.StatusFor(3, new MalAnime(1, "X", null, 12, 1, "plan_to_watch"), addToList: true) == ("watching", false), "a planned show moves to watching");
+Check(MyAnimeListSyncPlugin.StatusFor(3, new MalAnime(1, "X", null, 12), addToList: false) is null, "adding off leaves a show not on the list alone");
+Check(MyAnimeListSyncPlugin.StatusFor(3, new MalAnime(1, "X", null, 12, 1, "plan_to_watch"), addToList: false) is null, "adding off leaves a planned show alone");
+Check(MyAnimeListSyncPlugin.StatusFor(3, new MalAnime(1, "X", null, 12, 2, "watching"), addToList: false) == ("watching", false), "adding off still updates a watching show");
+Check(MyAnimeListSyncPlugin.StatusFor(3, new MalAnime(1, "X", null, 12, 2, "completed", Rewatching: true), addToList: false) == ("completed", true), "adding off still updates a rewatch");
 
 Console.WriteLine("All MyAnimeList sync checks passed.");
 

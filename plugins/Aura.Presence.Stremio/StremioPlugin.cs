@@ -159,7 +159,15 @@ public sealed partial class StremioPlugin : IPresencePlugin
     private void ReadPlayer()
     {
         _playerReads++;
-        _player = StremioPlayer.Read(_release!.HasTitle ? _release.Title : null);
+        var read = StremioPlayer.Read(_release!.HasTitle ? _release.Title : null);
+
+        if (read is not null && !TrustsPlayer(_release, read))
+        {
+            _context.Log.Info($"Stremio's player shows S{read.Season:00}E{read.Episode:00}, but the file is S{_release.Season:00}E{_release.Episode:00}; going by the file.");
+            return;
+        }
+
+        _player = read;
 
         if (_player is { } player)
             _context.Log.Info($"Read S{player.Season:00}E{player.Episode:00} of '{player.Show}' from Stremio's player.");
@@ -205,7 +213,7 @@ public sealed partial class StremioPlugin : IPresencePlugin
 
         return new NowPlaying
         {
-            Title = _entry?.Name ?? lookup?.Title ?? (release.HasTitle ? release.Title : player?.Show ?? UnknownTitle),
+            Title = KnownTitle(_entry?.Name, id?.Ids, lookup?.Title, lookup?.Ids) ?? (release.HasTitle ? release.Title : player?.Show ?? UnknownTitle),
             Kind = kind,
             Season = kind is MediaKind.Episode ? player?.Season ?? id?.Season ?? release.Season : null,
             Episode = kind is MediaKind.Episode ? episode : null,
@@ -269,8 +277,7 @@ public sealed partial class StremioPlugin : IPresencePlugin
         if (entry is null || lookup is null)
             return entry ?? lookup ?? new Dictionary<string, string>();
 
-        if (!entry.TryGetValue(MediaIdKeys.Imdb, out var imdb) || !lookup.TryGetValue(MediaIdKeys.Imdb, out var lookedUp) ||
-            imdb != lookedUp)
+        if (!SameShow(entry, lookup))
             return entry;
 
         var merged = new Dictionary<string, string>(lookup);
@@ -280,6 +287,17 @@ public sealed partial class StremioPlugin : IPresencePlugin
 
         return merged;
     }
+
+    public static string? KnownTitle(string? entryName, IReadOnlyDictionary<string, string>? entryIds, string? lookupTitle,
+        IReadOnlyDictionary<string, string>? lookupIds) =>
+        lookupTitle is not null && (entryName is null || SameShow(entryIds, lookupIds)) ? lookupTitle : entryName;
+
+    public static bool TrustsPlayer(ReleaseName release, PlayerTitle player) =>
+        release is not { Season: { } season, Episode: { } episode } || (player.Season == season && player.Episode == episode);
+
+    private static bool SameShow(IReadOnlyDictionary<string, string>? entry, IReadOnlyDictionary<string, string>? lookup) =>
+        entry is not null && lookup is not null &&
+        entry.TryGetValue(MediaIdKeys.Imdb, out var imdb) && lookup.TryGetValue(MediaIdKeys.Imdb, out var lookedUp) && imdb == lookedUp;
 
     public static string? StateLine(NowPlaying media)
     {

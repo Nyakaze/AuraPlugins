@@ -10,6 +10,7 @@ public sealed class AniListSyncPlugin : IPresencePlugin
     public const string TokenSetting = "accessToken";
     public const string ThresholdSetting = "watchedPercent";
     public const int DefaultThreshold = 80;
+    public const string AddToListSetting = "addToWatching";
     public const string PinRedirect = "https://anilist.co/api/v2/oauth/pin";
 
     private static readonly Uri DeveloperPage = new("https://anilist.co/settings/developer");
@@ -22,6 +23,7 @@ public sealed class AniListSyncPlugin : IPresencePlugin
     private WatchTracker _tracker = null!;
     private IDisposable? _subscription;
     private int _threshold;
+    private bool _addToList;
     private volatile string? _accountName;
     private string? _watching;
 
@@ -37,6 +39,9 @@ public sealed class AniListSyncPlugin : IPresencePlugin
     [
         new NumberSetting(ThresholdSetting, "Mark as watched at", DefaultThreshold, 50, 100, "%",
                 "How much of an episode you watch before it counts.")
+            { ShowWhen = settings => SetupStep(settings) is null, Card = "sync" },
+        new ToggleSetting(AddToListSetting, "Add to Watching", true,
+                "Puts a show on your Watching list as you watch it, also from Planning, Paused or Dropped. Off: only shows already on Watching are updated.")
             { ShowWhen = settings => SetupStep(settings) is null, Card = "sync" },
         new TextSetting(TokenSetting, _accountName is { } name ? $"Signed in as {name}" : "AniList account", "",
                 "Your access token. Click it to see it, or clear it to sign out.", Monospace: true, Secret: true)
@@ -73,6 +78,7 @@ public sealed class AniListSyncPlugin : IPresencePlugin
         }
 
         _threshold = Math.Clamp(context.Settings.Get(ThresholdSetting, DefaultThreshold), 50, 100);
+        _addToList = context.Settings.Get(AddToListSetting, true);
         _lookup = new AniListClient(_http);
         _account = new AniListAccount(_http, token);
         _tracker = new WatchTracker(_threshold);
@@ -110,9 +116,9 @@ public sealed class AniListSyncPlugin : IPresencePlugin
     public static bool Accepts(string title, int? season, AniListMedia candidate, bool strict) =>
         TitleMatches(title, season, candidate.English, strict) || TitleMatches(title, season, candidate.Romaji, strict);
 
-    public static string? StatusFor(int episode, AniListEntry entry)
+    public static string? StatusFor(int episode, AniListEntry entry, bool addToList)
     {
-        if (entry.Progress >= episode || entry.Episodes < episode)
+        if (entry.Progress >= episode || entry.Episodes < episode || !addToList && entry.Status is not ("CURRENT" or "REPEATING"))
             return null;
 
         return entry.Episodes <= episode ? "COMPLETED" : entry.Status == "REPEATING" ? "REPEATING" : "CURRENT";
@@ -194,9 +200,9 @@ public sealed class AniListSyncPlugin : IPresencePlugin
                 return;
             }
 
-            if (StatusFor(episode, entry) is not { } status)
+            if (StatusFor(episode, entry, _addToList) is not { } status)
             {
-                _context.Log.Info($"Skipped {label} on {entry.Title} ({id}): progress {entry.Progress?.ToString() ?? "none"} of {entry.Episodes?.ToString() ?? "?"}.");
+                _context.Log.Info($"Skipped {label} on {entry.Title} ({id}): {entry.Status ?? "not on your list"}, progress {entry.Progress?.ToString() ?? "none"} of {entry.Episodes?.ToString() ?? "?"}.");
                 return;
             }
 

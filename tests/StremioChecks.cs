@@ -92,6 +92,18 @@ Check(PlayerTitle.Parse("Frieren (1x13)") is { Show: "Frieren", EpisodeName: nul
 Check(PlayerTitle.Parse("Dune: Part Two") is null, "player text of a movie has no episode");
 Check(PlayerTitle.Parse("00:24:15") is null, "player times are not titles");
 
+var devilsCrest = new Dictionary<string, string> { [MediaIdKeys.Imdb] = "tt41054228" };
+var otherShow = new Dictionary<string, string> { [MediaIdKeys.Imdb] = "tt0000001" };
+Check(StremioPlugin.KnownTitle("Demonzu Kuresto", devilsCrest, "Devils' Crest", devilsCrest) == "Devils' Crest", "the looked-up title wins for the same show");
+Check(StremioPlugin.KnownTitle("Demonzu Kuresto", devilsCrest, "Other Show", otherShow) == "Demonzu Kuresto", "the library name wins when the lookup found another show");
+Check(StremioPlugin.KnownTitle("Demonzu Kuresto", devilsCrest, null, null) == "Demonzu Kuresto", "the library name is kept without a lookup");
+Check(StremioPlugin.KnownTitle(null, null, "Devils' Crest", devilsCrest) == "Devils' Crest", "the looked-up title is used before the library entry");
+
+var endOfTwo = ReleaseName.Parse("devils.crest.s01e02.1080p.web.h264-sugoi%255BEZTVx.to%255D.mkv");
+Check(!StremioPlugin.TrustsPlayer(endOfTwo, new PlayerTitle("Demonzu Kuresto", null, 1, 3)), "a player already on the next episode is ignored");
+Check(StremioPlugin.TrustsPlayer(endOfTwo, new PlayerTitle("Demonzu Kuresto", null, 1, 2)), "a player on the file's episode is used");
+Check(StremioPlugin.TrustsPlayer(absolute, new PlayerTitle("Frieren", null, 1, 12)), "absolute file numbers still take the player's season");
+
 Console.WriteLine("All Stremio checks passed.");
 
 static void Check(bool condition, string what)
